@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Piyu 💗</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+
+body{
+  background:linear-gradient(to bottom,#0b3d2e,#0f5c4a,#000);
+  height:100vh;
+  overflow:hidden;
+  color:white;
+}
+
+/* ❄️ Snow */
+.snow{
+  position:fixed;
+  top:-10px;
+  font-size:14px;
+  animation:fall linear infinite;
+}
+@keyframes fall{to{transform:translateY(110vh)}}
+
+/* Center */
+.center{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  width:100%;
+}
+
+/* 💌 Envelope */
+.envelope{
+  width:260px;height:170px;
+  background:#f5f5ff;
+  margin:auto;
+  border-radius:10px;
+  position:relative;
+  cursor:pointer;
+  box-shadow:0 15px 30px rgba(0,0,0,.4);
+  perspective:800px;
+}
+.flap{
+  position:absolute;top:0;left:0;
+  width:100%;height:50%;
+  background:#d6d6ff;
+  clip-path:polygon(0 0,50% 100%,100% 0);
+  transform-origin:top;
+  transition:1s;
+}
+.envelope.open .flap{transform:rotateX(180deg)}
+.seal{
+  position:absolute;
+  bottom:40%;left:50%;
+  transform:translateX(-50%);
+  width:40px;height:40px;
+  background:#ff4d6d;
+  border-radius:50%;
+}
+
+/* 📃 Letter */
+.letter{
+  display:none;
+  background:white;
+  color:#b30000;
+  width:90%;
+  max-width:360px;
+  margin:20px auto;
+  padding:25px;
+  border-radius:6px;
+  box-shadow:0 10px 25px rgba(0,0,0,.4);
+  animation:slideUp .8s forwards;
+}
+@keyframes slideUp{
+  from{opacity:0;transform:translateY(60px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* 🎁 Gifts */
+.gifts{
+  display:flex;
+  justify-content:center;
+  gap:25px;
+  margin-top:20px;
+}
+.gift{
+  width:130px;
+  height:130px;
+  background:#fff;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:3rem;
+  cursor:pointer;
+}
+
+/* 🎁 Shake */
+@keyframes giftShake{
+  0%{transform:rotate(0)}
+  20%{transform:rotate(3deg)}
+  40%{transform:rotate(-3deg)}
+  60%{transform:rotate(3deg)}
+  80%{transform:rotate(-3deg)}
+  100%{transform:rotate(0)}
+}
+.gift.shake{animation:giftShake .6s ease}
+
+/* ❤️ PERFECT HEART */
+.heart{
+  position: relative;
+  width: 100px;
+  height: 90px;
+  margin: auto;
+  animation: pulse 1s infinite;
+}
+.heart::before,
+.heart::after{
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 80px;
+  background: red;
+  border-radius: 50px 50px 0 0;
+  top: 0;
+}
+.heart::before{
+  left: 50px;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+.heart::after{
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+@keyframes pulse{
+  0%{transform: scale(1)}
+  50%{transform: scale(1.15)}
+  100%{transform: scale(1)}
+}
+
+/* 🍫 Chocolates */
+.choco{
+  position:fixed;
+  top:-20px;
+  font-size:2rem;
+  animation:drop 3s linear;
+}
+@keyframes drop{to{transform:translateY(110vh)}}
+
+button{
+  margin-top:20px;
+  padding:12px 26px;
+  border:none;
+  border-radius:30px;
+  background:#b30059;
+  color:white;
+}
+</style>
+</head>
+
+<body>
+
+<!-- STAGE 1 -->
+<div class="center" id="s1">
+  <h2>Happy New Year Piyu 💗</h2>
+  <div class="envelope" onclick="openEnv(this)">
+    <div class="flap"></div><div class="seal"></div>
+  </div>
+  <p>Tap the envelope 💌</p>
+</div>
+
+<!-- STAGE 2 -->
+<div class="center" id="s2" style="display:none">
+  <div class="letter">
+    <h3>Dear Piyu,</h3>
+    <p>
+      First of all , A Very Very Happy New Year to YOU , Like Christmas I have tried something to make for you again, I hope you like this one too . My main motive behind doing this is to make you feel special (You indeed are Special) . Take this as a little gift from Me to youuuu.💗
+    </p>
+    <button onclick="showGifts()">Open Gifts 🎁</button>
+  </div>
+</div>
+
+<!-- STAGE 3 -->
+<div class="center" id="s3" style="display:none">
+  <p style="margin-bottom:15px;">Tap the gifts 🎁 to open them</p>
+
+  <div class="gifts">
+    <div class="gift" onclick="openGift(this,1)">🎁</div>
+    <div class="gift" onclick="openGift(this,2)">🎁</div>
+    <div class="gift" onclick="openGift(this,3)">🎁</div>
+  </div>
+
+  <div class="letter" id="giftLetter"></div>
+  <button onclick="startBomb()">Final Surprise ❤️</button>
+</div>
+
+<!-- STAGE 4 -->
+<div class="center" id="s4" style="display:none">
+  <div class="heart"></div>
+  <h1 id="count">3</h1>
+</div>
+
+<script>
+const giftTexts={
+  1:"You literally came like an angel from above to me this December, Piyu 💗",
+  2:"I wait for your message to pop-up , and once it comes ,It makes my day✨",
+  3:"Remain the same as always. I am totally flattered by your personality, Piyu - You are genuinely attractive 🫶🏻"
+};
+
+function openEnv(el){
+  el.classList.add("open");
+  setTimeout(()=>{
+    s1.style.display="none";
+    s2.style.display="block";
+    document.querySelector(".letter").style.display="block";
+  },800);
+}
+
+function showGifts(){
+  s2.style.display="none";
+  s3.style.display="block";
+}
+
+function openGift(g,num){
+  g.classList.add("shake");
+  setTimeout(()=>g.classList.remove("shake"),600);
+  setTimeout(()=>{
+    giftLetter.innerText=giftTexts[num];
+    giftLetter.style.display="block";
+  },600);
+}
+
+function startBomb(){
+  s3.style.display="none";
+  s4.style.display="block";
+  let t=3;
+  count.innerText=t;
+
+  let i=setInterval(()=>{
+    count.innerText=--t;
+    if(t===0){
+      clearInterval(i);
+      s4.innerHTML=`<h1>
+Happiest New Year to Cutieee Pieeee Ji 💗🎀<br>
+Stay Blessed , Stay Closeee 💗
+</h1>`;
+      chocolateRain(40);
+    }
+  },1000);
+}
+
+function chocolateRain(n){
+  for(let i=0;i<n;i++){
+    let c=document.createElement("div");
+    c.className="choco";
+    c.innerHTML="🍫";
+    c.style.left=Math.random()*100+"vw";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3000);
+  }
+}
+
+/* Snow */
+for(let i=0;i<60;i++){
+  let s=document.createElement("div");
+  s.className="snow";
+  s.innerHTML="❄";
+  s.style.left=Math.random()*100+"vw";
+  s.style.animationDuration=(Math.random()*3+3)+"s";
+  document.body.appendChild(s);
+}
+</script>
+
+</body>
+</html>
